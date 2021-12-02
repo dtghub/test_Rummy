@@ -1,0 +1,54 @@
+Dummy test until I've written the rules!
+
+
+
+- use the rules from https://www.dummies.com/games/card-games/gin-rummy/rummy-understanding-the-rules-and-starting-a-game/
+
+
+- offer to display instructions
+
+
+- maybe give the player a set of choices at the start of the game e.g. target score, number of players etc
+
+
+- player 1 goes first - you are assigned a player number at random, so if you are player 2 - you go second
+
+
+- each computer player 'plays' by displayng a line or lines;
+Player 1 picks up a card from the stock and discards 5H
+Player 1 plays set; 7H 7D 7C
+Player 1 melds; adds 7S to 8S 9S 10S
+Player 1 melds; adds JS to 7S 8S 9S 10S
+
+
+- on player turn they are shown their status
+
+
+
+- player can choose from gameplay options, end turn or game, display status for another player (how many cards the player has left and what sets they have in front of them)
+
+- gameplay options include discard, play set, meld card
+
+- choosing a gameplay option lets the player choose from their possible legal plays for that option
+
+
+
+
+
+- for computer turn, create an empty list of plays and the score of these plays, then identify and create a list of the possible legal plays - if there are no possible plays then return form the funtion with the list and score
+- iterate through the list; - add the next play to the list and the score for that sequence of plays, and recurse into the function again - on return compare the sequence and score with the higest-so-far and keep the highest etc
+
+
+    
+
+
+
+
+
+
+- game ends when a player has no cards left in their hand
+
+- when totting up the scores at the end of a game, display itemised scoring for each player set and for the remaining cards in their hand
+
+
+
