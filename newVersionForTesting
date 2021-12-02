@@ -2,8 +2,12 @@ from os import truncate
 import playingCard
 import random
 import copy
+from ConsoleInput import ConsoleInput
 
+consoleInput = ConsoleInput()
 
+def setConsoleInput(userInput):
+    consoleInput = userInput
 
 def initGameState():
 
@@ -219,7 +223,55 @@ def displayPlayerPosition(gameState):
             playingCard.convertNumbersToFaces(plays)
             print(plays)
             playingCard.convertFacesToNumbers(plays)
-     
+
+
+
+
+
+
+def displayInitialPosition(gameState):
+    print("Under construction")
+
+    displayStock(gameState)
+
+    for handToDisplay in range(gameState["numberOfPlayers"]):
+        if handToDisplay == gameState["playerNumber"]:
+            displayPlayerPosition(gameState)
+        else:
+            displayComputerPosition(handToDisplay, gameState)
+
+
+
+
+
+
+
+def setupNewGame(gameState):
+    gameState["deck"] = setupNewDeck()
+    gameState = getPlayerChoices(gameState)
+    gameState = determinePlayingOrder(gameState)
+    gameState = initiateEnvironment(gameState)
+    gameState = dealTheHands(gameState)
+    gameState = initiateTheStock(gameState)
+    displayInitialPosition(gameState)
+    print(gameState)
+    return(gameState)
+
+
+
+
+
+
+
+
+# set up the listOfPlays structure at the start of the evaluation
+def setupListOfPlays(gameState, currentPlayer):
+    listOfPlays = initListOfPlays()
+    listOfPlays["playsFound"] = copy.deepcopy(gameState["plays"][currentPlayer])
+    listOfPlays["playerHand"] = copy.deepcopy(gameState["hands"][currentPlayer])
+
+    return(listOfPlays)
+
 
 
 
