@@ -156,3 +156,73 @@ def getPlayerChoices(gameState):
     gameState = askPlayerForPrefs(gameState)
     return(gameState)
 
+
+
+def determinePlayingOrder(gameState):
+    playerNum = random.randint(0, gameState["numberOfPlayers"] - 1)
+    print("You are player number " + str(playerNum + 1))
+    gameState["playerNumber"] = playerNum
+    return(gameState)
+
+
+
+def initiateEnvironment(gameState):
+    for i in range(gameState["numberOfPlayers"]):
+        gameState["plays"].append([])
+    return(gameState)
+
+
+
+def dealTheHands(gameState):
+    if (gameState["numberOfPlayers"] < 5):
+        cardsPerHand = 10
+    else:
+        cardsPerHand = 6
+    gameState["hands"] = playingCard.dealCards(gameState["deck"], cardsPerHand, gameState["numberOfPlayers"])
+    playingCard.sortHands(gameState["hands"])
+    return(gameState)
+
+
+
+
+
+
+
+
+def displayStock(gameState):
+    topCard = gameState["stock"][len(gameState["stock"]) - 1]
+    print("The top card on the stock pile is:", topCard)
+
+
+
+def initiateTheStock(gameState):
+    gameState["stock"].append(playingCard.dealACard(gameState["deck"]))
+    displayStock(gameState)
+    return(gameState)
+
+
+    
+def displayComputerPosition(computerHand, gameState):
+    print("Player", computerHand + 1, "has", len(gameState["hands"][computerHand]), "cards left in their hand.")
+    if (len(gameState["plays"][computerHand]) > 0):
+        print("They have played the following:", gameState["plays"][computerHand])
+
+
+
+def displayPlayerPosition(gameState):
+    playerHand = gameState["playerNumber"]
+    print("You are player", playerHand+1)
+    print("You have the following cards in your hand:", gameState["hands"][playerHand])
+    if (len(gameState["plays"][playerHand]) > 0):
+        print("You have played the following:")
+        for plays in gameState["plays"][playerHand]:
+            playingCard.convertNumbersToFaces(plays)
+            print(plays)
+            playingCard.convertFacesToNumbers(plays)
+     
+
+
+
+
+
+
