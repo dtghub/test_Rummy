@@ -1,0 +1,158 @@
+from os import truncate
+import playingCard
+import random
+import copy
+
+
+
+def initGameState():
+
+    initGameState = {
+        "rulesFilename": "Gamerules.txt",
+        "playerNumber": 0,
+        "gameRound": 0,
+        "deck": [],
+        "hands": [],
+        "plays": [],
+        "stock": [],
+        "score": [],
+        "scoreToWin": 1000,
+        "numberOfPlayers": 4
+    }
+    gameState = copy.deepcopy(initGameState)
+    return(gameState)
+
+
+
+def initListOfPlays():
+    initListOfPlays = {
+        "playerHand": [],
+        "playsFound": [],
+        "newPlaysFound": [],
+        "playsMadeSoFar": [],
+        "bestScoreSoFar": 0
+    }
+    listOfPlays = copy.deepcopy(initListOfPlays)
+    return(listOfPlays)
+
+
+
+
+
+def askYorN(questionString):
+    validResponse = False
+    while (not validResponse):
+        questionResponse = input(questionString)
+        if ((len(questionResponse) == 1) and (questionResponse.lower() in "yn")):
+           validResponse = True
+        else:
+            print("Please enter 'y' or 'n'")
+    return(questionResponse.lower() == "y")
+
+
+
+def setupNewDeck():
+    newDeck = playingCard.generateDeck()
+    newDeck = playingCard.shuffleCards(newDeck)
+    return(newDeck)
+
+
+
+def getCardFromDeck(gameState):
+    # have we exhauseted the deck?
+    # if so, turn over the stock pile and shuffle
+    if (gameState["deck"] == []):
+        lenOfStock = len(gameState["stock"])
+        if (lenOfStock == 1):
+            print("Deck is empty. Only the stock card remains!")
+            print("Drawing stock card!")
+            topCard = playingCard.dealACard(gameState["stock"])
+        else:
+            gameState["deck"] = gameState["stock"][0:lenOfStock - 2]
+            gameState["stock"] = [gameState["stock"][lenOfStock - 1]]
+            playingCard.shuffleCards(gameState["deck"])
+            topCard = playingCard.dealACard(gameState["deck"])
+    else:
+        topCard = playingCard.dealACard(gameState["deck"])
+    return(topCard)
+
+
+
+def displayRules(rulesFilename):
+    try:
+        with open(rulesFilename, "r") as f:
+            emailTemplate = f.read()
+    except OSError as err:
+        print("Hmmm: something went wrong:")
+        print("OS error: {0}".format(err))
+        print("Unable to open the game rules file...")
+        emailTemplate = ""
+    return emailTemplate
+
+
+
+def getNumberFromPlayer(inputText, min = -1, max = -1, defaultValue = -1):
+    isNotValidInput = True
+
+    while (isNotValidInput):
+        isAboveMin = True
+        isBelowMax = True
+
+        playerChoice = input(inputText)
+        
+        if (defaultValue != -1):
+            if (playerChoice == ""):
+                playerChoice = str(defaultValue)
+
+        if (playerChoice.isdigit()):
+            playerChoice = int(playerChoice)
+
+            rangeInfo = ""
+            if (min != -1):
+                rangeInfo = ", minimum; " + str(min)
+            if (max != -1):
+                rangeInfo += ", maximum; " + str(max)
+
+            if ((playerChoice < min) and (min != -1)):
+                isAboveMin = False
+            if ((playerChoice > max) and (min != -1)):
+                isBelowMax = False
+
+            if (isAboveMin and isBelowMax):
+                isNotValidInput = False
+            else:
+                print("Sorry, you need to enter a number" + rangeInfo)
+
+    return(playerChoice)
+
+
+
+
+
+
+def welcomeThePlayer(rulesFilename):
+    print("\nWelcome to Rummy!\n\n")
+    if askYorN("Would you like to see the instructions? (y or n): "):
+        print(displayRules(rulesFilename))
+
+
+
+def askPlayerForPrefs(gameState):
+    print("If you want, you can just press enter to accept the default answers (shown in brackets) to the following questions.")
+
+    playerChoice = getNumberFromPlayer("Please enter the target score to win (1000): ", 10, 100000, 1000)
+    gameState["scoreToWin"] = playerChoice
+
+    playerChoice = getNumberFromPlayer("Please enter the number of players (4):", 2, 5, 4)
+    gameState["numberOfPlayers"] = playerChoice
+    
+    return(gameState)
+
+
+
+
+def getPlayerChoices(gameState):
+    welcomeThePlayer(gameState["rulesFilename"])
+    gameState = askPlayerForPrefs(gameState)
+    return(gameState)
+
